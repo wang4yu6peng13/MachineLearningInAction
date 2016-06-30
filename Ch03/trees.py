@@ -12,6 +12,7 @@ def createDataSet():
     labels = ['no surfacing', 'flippers']
     return dataSet, labels
 
+# 计算给定数据集的香农熵
 def calcShannonEnt(dataSet):
     numEntries = len(dataSet)
     labelCounts = {}
@@ -24,10 +25,10 @@ def calcShannonEnt(dataSet):
     shannonEnt = 0.0
     for key in labelCounts:
         prob = float(labelCounts[key])/numEntries
-        # 以2为底求对数
-        shannonEnt -= prob * log(prob, 2)
+        shannonEnt -= prob * log(prob, 2)        # 以2为底求对数
     return shannonEnt
 
+# 按照给定特征划分数据集
 def splitDataSet(dataSet, axis, value):
     retDataSet = []
     for featVec in dataSet:
@@ -38,6 +39,7 @@ def splitDataSet(dataSet, axis, value):
             retDataSet.append(reducedFeatVec)
     return retDataSet
 
+# 选择最好的数据集划分方式
 def chooseBestFeatureToSplit(dataSet):
     numFeatures = len(dataSet[0]) - 1
     baseEntropy = calcShannonEnt(dataSet)
@@ -68,6 +70,7 @@ def majorityCnt(classList):
     sortedClassCount = sorted(classCount.iteritems(), key=operator.itemgetter(1), reverse=True)
     return sortedClassCount[0][0]
 
+# 创建树的函数代码
 def createTree(dataSet, labels):
     classList = [example[-1] for example in dataSet]
     # 类别完全相同则停止继续划分
@@ -88,6 +91,7 @@ def createTree(dataSet, labels):
         myTree[bestFeatLabel][value] = createTree(splitDataSet(dataSet, bestFeat, value), subLabels)
     return myTree
 
+# 使用决策树的分类函数
 def classify(inputTree, featLabels, testVec):
     firstStr = inputTree.keys()[0]
     secondDict = inputTree[firstStr]
@@ -100,6 +104,7 @@ def classify(inputTree, featLabels, testVec):
         classLabel = valueOfFeat
     return classLabel
 
+# 使用pickle模块存储决策树
 def storeTree(inputTree, filename):
     import pickle
     fw = open(filename, 'w')

@@ -1,6 +1,8 @@
 #coding:utf-8
 import matplotlib.pyplot as plt
 
+# 使用文本注解绘制树节点
+
 # 定义文本框和箭头格式
 decisionNode = dict(boxstyle="sawtooth", fc="0.8")
 leafNode = dict(boxstyle="round4", fc="0.8")
@@ -22,6 +24,7 @@ def createPlot():
     plt.show()
 '''
 
+# 获取叶节点的数目和树的层数
 def getNumLeafs(myTree):
     numLeafs = 0
     firstStr = myTree.keys()[0]
@@ -66,8 +69,7 @@ def plotTree(myTree, parentPt, nodeTxt):
     depth = getTreeDepth(myTree)
     firstStr = myTree.keys()[0]
     cntrPt = (plotTree.xOff + (1.0 + float(numLeafs))/2.0/plotTree.totalW, plotTree.yOff)
-    # 标记子节点属性值
-    plotMidText(cntrPt, parentPt, nodeTxt)
+    plotMidText(cntrPt, parentPt, nodeTxt)    # 标记子节点属性值
     plotNode(firstStr, cntrPt, parentPt, decisionNode)
     secondDict = myTree[firstStr]
     # 减少 y 偏移

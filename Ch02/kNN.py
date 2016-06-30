@@ -9,6 +9,7 @@ def createDataSet():
     labels = ['A', 'A', 'B', 'B']
     return group, labels
 
+# k近邻算法
 def classify0(inX, dataSet, labels, k):
     dataSetSize = dataSet.shape[0]
     # 距离计算
@@ -22,18 +23,16 @@ def classify0(inX, dataSet, labels, k):
         # 选择距离最小的k个点
         voteIlabel = labels[sortedDistIndicies[i]]
         classCount[voteIlabel] = classCount.get(voteIlabel, 0) + 1
-    # 排序
-    sortedClassCount = sorted(classCount.iteritems(), key=operator.itemgetter(1), reverse=True)
+    sortedClassCount = sorted(classCount.iteritems(), key=operator.itemgetter(1), reverse=True)     # 排序
     return sortedClassCount[0][0]
 
+# 将文本记录到转换Numpy的解析程序
 def file2matrix(filename):
     love_dictionary={'largeDoses':3, 'smallDoses':2, 'didntLike':1}
     fr = open(filename)
-    # 得到文件行数
-    arrayOLines = fr.readlines()
-    numberOfLines = len(arrayOLines)
-    # 创建返回的NumPy矩阵
-    returnMat = zeros((numberOfLines, 3))
+    arrayOLines = fr.readlines()  
+    numberOfLines = len(arrayOLines)   # 得到文件行数
+    returnMat = zeros((numberOfLines, 3))    # 创建返回的NumPy矩阵
     classLabelVector = []
     index = 0
     # 解析文件数据到列表
@@ -48,6 +47,7 @@ def file2matrix(filename):
         index += 1
     return returnMat, classLabelVector
 
+# 归一化特征值
 def autoNorm(dataSet):
     minVals = dataSet.min(0)
     maxVals = dataSet.max(0)
@@ -58,6 +58,7 @@ def autoNorm(dataSet):
     normDataSet = normDataSet / tile(ranges, (m,1)) # 特征值相除
     return normDataSet, ranges, minVals
 
+# 分类器针对约会网站的测试代码
 def datingClassTest():
     hoRatio = 0.10
     datingDataMat, datingLabels = file2matrix('datingTestSet.txt')
@@ -72,6 +73,7 @@ def datingClassTest():
     print "the total error rate is: %f" % (errorCount/float(numTestVecs))
     print errorCount
 
+# 约会网站预测函数
 def classifyPerson():
     resultList = ['not at all', 'in small doses', 'in large doses']
     percentTats = float(raw_input("percentage of time spent playing video games?"))
@@ -92,6 +94,7 @@ def img2vector(filename):
             returnVect[0, 32*i+j] = int(lineStr[j])
     return returnVect
 
+# 手写数字识别系统的测试代码
 def handwritingClassTest():
     hwLabels = []
     trainingFileList = listdir('trainingDigits') # 获取目录内容

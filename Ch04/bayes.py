@@ -1,6 +1,7 @@
 # coding:utf-8
 from numpy import *
 
+# 词表到向量的转换函数
 def loadDataSet():
     postingList=[['my', 'dog', 'has', 'flea', 'problems', 'help', 'please'],
                  ['maybe', 'not', 'take', 'him', 'to', 'dog', 'park', 'stupid'],
@@ -26,6 +27,7 @@ def setOfWords2Vec(vocabList, inputSet):
             print "the word %s is not in my Vocabulary!" % word
     return returnVec
 
+# 朴素贝叶斯分类器训练函数
 def trainNB0(trainMatrix, trainCategory):
     numTrainDocs = len(trainMatrix)
     numWords = len(trainMatrix[0])
@@ -44,6 +46,7 @@ def trainNB0(trainMatrix, trainCategory):
     p0Vect = log(p0Num / p0Denom)
     return p0Vect, p1Vect, pAbusive
 
+# 朴素贝叶斯分类函数
 def classifyNB(vec2Classify, p0Vec, p1Vec, pClass1):
     p1 = sum(vec2Classify * p1Vec) + log(pClass1)
     p0 = sum(vec2Classify * p0Vec) + log(1.0 - pClass1)
@@ -66,6 +69,7 @@ def testingNB():
     thisDoc = array(setOfWords2Vec(myVocabList, testEntry))
     print testEntry, 'classified as: ', classifyNB(thisDoc, p0V, p1V, pAb)
 
+# 朴素贝叶斯词袋模型
 def bagOfWords2VecMN(vocabList, inputSet):
     returnVec = [0] * len(vocabList) # 创建一个其中所含元素都为0的向量
     for word in inputSet:
@@ -73,6 +77,7 @@ def bagOfWords2VecMN(vocabList, inputSet):
             returnVec[vocabList.index(word)] += 1
     return returnVec
 
+# 文件解析及完整的垃圾邮件测试函数
 def textParse(bigString):
     import re
     listOfTokens = re.split(r'\W*', bigString)
@@ -111,8 +116,9 @@ def spamTest():
             print "classification error", docList[docIndex]
     print 'the error rate is: ', float(errorCount)/len(testSet)
 
-# 计算出现频率
+# RSS源分类器及高频词去除函数
 def calcMostFreq(vocabList,fullText):
+    # 计算出现频率
     import operator
     freqDict = {}
     for token in vocabList:
@@ -158,6 +164,7 @@ def localWords(feed1,feed0):
     print 'the error rate is: ',float(errorCount)/len(testSet)
     return vocabList, p0V, p1V
 
+# 最具表征性的词汇显示函数
 def getTopWords(ny, sf):
     import operator
     vocabList, p0V, p1V = localWords(ny, sf)
