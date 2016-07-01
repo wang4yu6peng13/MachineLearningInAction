@@ -1,6 +1,7 @@
 #coding:utf8
 from numpy import *
 
+# Logistic回归梯度上升优化算法
 def loadDataSet():
     dataMat, labelMat = [], []
     fr = open('testSet.txt')
@@ -28,6 +29,7 @@ def gradAscent(dataMatIn, classLabels):
         weights = weights + alpha * dataMatrix.transpose() * error
     return weights
 
+# 画出数据集和Logistic回归最佳拟合直线的函数
 def plotBestFit(weights):
     import matplotlib.pyplot as plt
     dataMat, labelMat = loadDataSet()
@@ -52,6 +54,7 @@ def plotBestFit(weights):
     plt.ylabel('X2')
     plt.show()
 
+# 随机梯度上升算法
 def stocGradAscent0(dataMatrix, classLabels):
     m, n = shape(dataMatrix)
     alpha = 0.01
@@ -62,6 +65,7 @@ def stocGradAscent0(dataMatrix, classLabels):
         weights = weights + alpha * dataMatrix[i] * error
     return weights
 
+# 改进的随机梯度上升算法
 def stocGradAscent1(dataMatrix, classLabels, numIter=150):
     m, n = shape(dataMatrix)
     weights = ones(n)
@@ -69,14 +73,14 @@ def stocGradAscent1(dataMatrix, classLabels, numIter=150):
         dataIndex = range(m)
         for i in range(m):
             alpha = 4/(1.0+j+i)+0.0001  # alpha 每次迭代时需要调整
-            # 随机选取更新
-            randIndex = int(random.uniform(0, len(dataIndex)))
+            randIndex = int(random.uniform(0, len(dataIndex)))            # 随机选取更新
             h = sigmoid(sum(dataMatrix[randIndex]*weights))
             error = classLabels[randIndex] - h
             weights = weights + alpha * dataMatrix[randIndex] * error
             del(dataIndex[randIndex])
     return weights
 
+# Logistic回归分类函数
 def classifyVector(inX, weights):
     prob = sigmoid(sum(inX*weights))
     if prob > 0.5:

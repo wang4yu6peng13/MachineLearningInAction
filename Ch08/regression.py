@@ -1,6 +1,7 @@
 #coding:utf-8
 from numpy import *
 
+# 标准回归函数和数据导入函数
 def loadDataSet(fileName):
     numFeat = len(open(fileName).readline().split('\t')) - 1
     dataMat, labelMat = [], []
@@ -23,6 +24,7 @@ def standRegres(xArr, yArr):
     ws = xTx.I * (xMat.T * yMat)
     return ws
 
+# 局部加权线性回归函数
 def lwlr(testPoint, xArr, yArr, k=1.0):
     xMat, yMat = mat(xArr), mat(yArr).T
     m = shape(xMat)[0]

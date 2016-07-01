@@ -1,6 +1,7 @@
 #coding:utf-8
 from numpy import *
 
+# SMO算法中的辅助函数
 def loadDataSet(fileName):
     dataMat, labelMat = [], []
     fr = open(fileName)
@@ -23,6 +24,7 @@ def clipAlpha(aj, H, L):
         aj = L
     return aj
 
+# 简化版SMO算法
 def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
     dataMatrix, labelMat = mat(dataMatIn), mat(classLabels).transpose()
     b = 0
@@ -78,6 +80,7 @@ def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
         print "iteration number: %d" % iter
     return b, alphas
 
+# 完整版Platt SMO的支持函数
 class optStruct:
     def __init__(self, dataMatIn, classLabels, C, toler):
         self.X = dataMatIn
@@ -112,9 +115,12 @@ def selectJ(i, oS, Ei): # 内循环中的启发式方法
         j = selectJrand(i, oS.m)
         Ej = calcEk(oS, j)
     return j, Ej
+
 def updateEk(oS, k):
     Ek = calcEk(oS, k)
     oS.eCache[k] = [1, Ek]
+
+# 完整版Platt SMO算法中的优化例程
 def innerL(i, oS):
     Ei = calcEk(oS, i)
     if ((oS.labelMat[i]*Ei < -oS.tol) and (oS.alphas[i] < oS.C)) or ((oS.labelMat[i]*Ei > oS.tol) and (oS.alphas[i] > 0)):
@@ -153,6 +159,8 @@ def innerL(i, oS):
         return 1
     else: 
         return 0
+
+# 完整版Platt SMO的外循环代码
 def smoP(dataMatIn, classLabels, C, toler, maxIter,kTup=('lin', 0)):    #full PlattSMO
     oS = optStruct(mat(dataMatIn),mat(classLabels).transpose(),C,toler)
     iter = 0

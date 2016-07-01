@@ -10,6 +10,7 @@ def loadSimpData():
     classLabels = [1.0, 1.0, -1.0, -1.0, 1.0]
     return datMat, classLabels
 
+# 单层决策树生成函数
 def stumpClassify(dataMatrix, dimen, threshVal, threshIneq):
     retArray = ones((shape(dataMatrix)[0], 1))
     if threshIneq == 'lt':
@@ -40,6 +41,7 @@ def buildStump(dataArr, classLabels, D):
                     bestStump['dim'], bestStump['thresh'], bestStump['ineq'] = i, threshVal, inequal
     return bestStump, minError, bestClasEst
 
+# 基于单层决策树的AdaBoost训练过程
 def adaBoostTrainDS(dataArr, classLabels, numIt=40):
     weakClassArr = []
     m = shape(dataArr)[0]
@@ -67,6 +69,7 @@ def adaBoostTrainDS(dataArr, classLabels, numIt=40):
     #return weakClassArr
     return weakClassArr, aggClassEst
 
+# AdaBoost分类函数
 def adaClassify(datToClass, classifierArr):
     dataMatrix = mat(datToClass)
     m = shape(dataMatrix)[0]
@@ -77,6 +80,7 @@ def adaClassify(datToClass, classifierArr):
         # print aggClassEst
     return sign(aggClassEst)
 
+# 自适应数据加载函数
 def loadDataSet(fileName):
     numFeat = len(open(fileName).readline().split('\t'))
     dataMat, labelMat = [], []
@@ -90,6 +94,7 @@ def loadDataSet(fileName):
         labelMat.append(float(curLine[-1]))
     return dataMat, labelMat
 
+# ROC曲线的绘制及AUC计算函数
 def plotROC(predStrengths, classLabels):
     import matplotlib.pyplot as plt
     cur = (1.0, 1.0)

@@ -23,6 +23,7 @@ def clipAlpha(aj, H, L):
         aj = L
     return aj
 
+# 核转换函数
 def kernelTrans(X, A, kTup): #calc the kernel or transform data to a higher dimensional space
     m, n = shape(X)
     K = mat(zeros((m, 1)))
@@ -144,13 +145,14 @@ def smoP(dataMatIn, classLabels, C, toler, maxIter,kTup=('lin', 0)):    #full Pl
         print "iteration number: %d" % iter
     return oS.b, oS.alphas
 
+# 利用核函数进行分类的径向基测试函数
 def testRbf(k1=1.3):
     dataArr,labelArr = loadDataSet('testSetRBF.txt')
     b,alphas = smoP(dataArr, labelArr, 200, 0.0001, 10000, ('rbf', k1)) #C=200 important
     datMat=mat(dataArr); labelMat = mat(labelArr).transpose()
     svInd=nonzero(alphas.A>0)[0]
     sVs=datMat[svInd] #get matrix of only support vectors
-    labelSV = labelMat[svInd];
+    labelSV = labelMat[svInd]
     print "there are %d Support Vectors" % shape(sVs)[0]
     m,n = shape(datMat)
     errorCount = 0
@@ -178,6 +180,7 @@ def img2vector(filename):
             returnVect[0,32*i+j] = int(lineStr[j])
     return returnVect
 
+# 基于SVM的手写数字识别
 def loadImages(dirName):
     from os import listdir
     hwLabels = []
