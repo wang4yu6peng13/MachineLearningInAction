@@ -11,3 +11,7 @@ print kMeans.distEclud(datMat[0], datMat[1])
 
 myCentroids, clustAssing = kMeans.kMeans(datMat, 4)
 #print myCentroids, clustAssing
+
+datMat3 = mat(kMeans.loadDataSet('testSet2.txt'))
+centList, myNewAssments = kMeans.biKmeans(datMat3, 3)
+print centList
