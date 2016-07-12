@@ -59,3 +59,88 @@ def updateHeader(nodeToTest, targetNode):   #this version does not use recursion
     while nodeToTest.nodeLink != None:    #Do not use recursion to traverse a linked list!
         nodeToTest = nodeToTest.nodeLink
     nodeToTest.nodeLink = targetNode
+
+# 简单数据集及数据包装器
+def loadSimpDat():
+    simpDat = [['r', 'z', 'h', 'j', 'p'],
+               ['z', 'y', 'x', 'w', 'v', 'u', 't', 's'],
+               ['z'],
+               ['r', 'x', 'n', 'o', 's'],
+               ['y', 'r', 'x', 'z', 'q', 't', 'p'],
+               ['y', 'z', 'x', 'e', 'q', 's', 't', 'm']]
+    return simpDat
+
+def createInitSet(dataSet):
+    retDict = {}
+    for trans in dataSet:
+        retDict[frozenset(trans)] = 1
+    return retDict
+
+# 发现以给定元素项结尾的所有路径的函数
+def ascendTree(leafNode, prefixPath):
+    if leafNode.parent != None: # 迭代上溯整棵树
+        prefixPath.append(leafNode.name)
+        ascendTree(leafNode.parent, prefixPath)
+
+def findPrefixPath(basePat, treeNode):
+    condPats = {}
+    while treeNode != None:
+        prefixPath = []
+        ascendTree(treeNode, prefixPath)
+        if len(prefixPath) > 1:
+            condPats[frozenset(prefixPath[1:])] = treeNode.count
+        treeNode = treeNode.nodeLink
+    return condPats
+
+# 递归查找频繁项集的mineTree函数
+def mineTree(inTree, headerTable, minSup, preFix, freqItemList):
+    bigL = [v[0] for v in sorted(headerTable.items(), key=lambda p: p[1])]
+    for basePat in bigL: # 从头指针表的底端开始
+        newFreqSet = preFix.copy()
+        newFreqSet.add(basePat)
+        freqItemList.append(newFreqSet)
+        condPattBases = findPrefixPath(basePat, headerTable[basePat][1])
+        myCondTree, myHead = createTree(condPattBases, minSup) # 从条件模式基来构建条件FP树
+        if myHead != None: # 挖掘条件FP树
+            #print 'conditional tree for: ',newFreqSet
+            #myCondTree.disp(1)  
+            mineTree(myCondTree, myHead, minSup, newFreqSet, freqItemList)
+
+'''
+# 访问Twitter Python库的代码
+import twitter
+from time import sleep
+import re
+
+def getLotsOfTweets(searchStr):
+    CONSUMER_KEY = ''
+    CONSUMER_SECRET = ''
+    ACCESS_TOKEN_KEY = ''
+    ACCESS_TOKEN_SECRET = ''
+    api = twitter.Api(consumer_key=CONSUMER_KEY, consumer_secret=CONSUMER_SECRET, access_token_key=ACCESS_TOKEN_KEY, access_token_secret=ACCESS_TOKEN_SECRET)
+    #you can get 1500 results 15 pages * 100 per page
+    resultsPages = []
+    for i in range(1,15):
+        print "fetching page %d" % i
+        searchResults = api.GetSearch(searchStr, per_page=100, page=i)
+        resultsPages.append(searchResults)
+        sleep(6)
+    return resultsPages
+
+# 文本解析及合成代码
+def textParse(bigString):
+    urlsRemoved = re.sub('(http[s]?:[/][/]|www.)([a-z]|[A-Z]|[0-9]|[/.]|[~])*', '', bigString)    
+    listOfTokens = re.split(r'\W*', urlsRemoved)
+    return [tok.lower() for tok in listOfTokens if len(tok) > 2]
+
+def mineTweets(tweetArr, minSup=5):
+    parsedList = []
+    for i in range(14):
+        for j in range(100):
+            parsedList.append(textParse(tweetArr[i][j].text))
+    initSet = createInitSet(parsedList)
+    myFPtree, myHeaderTab = createTree(initSet, minSup)
+    myFreqList = []
+    mineTree(myFPtree, myHeaderTab, minSup, set([]), myFreqList)
+    return myFreqList
+'''
