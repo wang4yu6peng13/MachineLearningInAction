@@ -21,3 +21,18 @@ print myMat
 print svdRec.recommend(myMat, 2)
 print svdRec.recommend(myMat, 2, simMeas=svdRec.ecludSim)
 print svdRec.recommend(myMat, 2, simMeas=svdRec.pearsSim)
+
+from numpy import linalg as la
+U, Sigma, VT = la.svd(mat(svdRec.loadExData2()))
+print Sigma
+Sig2 = Sigma**2
+print sum(Sig2)
+print sum(Sig2)*0.9
+print sum(Sig2[:2])
+print sum(Sig2[:3])
+
+myMat = mat(svdRec.loadExData2())
+print svdRec.recommend(myMat, 1, estMethod=svdRec.svdEst)
+print svdRec.recommend(myMat, 1, estMethod=svdRec.svdEst,simMeas=svdRec.pearsSim)
+
+svdRec.imgCompress(2)
